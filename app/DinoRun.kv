@@ -5,10 +5,13 @@ ScreenManager:
 
 <FirstPage>:
 	name: 'first'
-	BoxLayout:
-		orientation: 'vertical'
+	FloatLayout:
 		Button:
-			text: 'Play'
+			text: 'Play Game'
+			size_hint: 0.2, 0.15
+			pos_hint: {"x" : 0.4, "top" : 0.65}
+			font_size: 30
+			background_color: 0.5, 0.2, 0.65, 1
 			# on_press: root.manager.current = 'second'
 		
 <SecondPage>:
