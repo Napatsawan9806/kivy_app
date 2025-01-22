@@ -10,6 +10,12 @@ from kivy.clock import Clock
 
 class Background(Widget):
     clound_texture = ObjectProperty(None)
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.clound_texture = Image(source="clound.png").texture
+
     pass
 
 
