@@ -65,11 +65,13 @@ class DinoRunApp(App):
     def build(self):
         sm = ScreenManager()
         sm.add_widget(FirstPage(name="first"))
-        # sm.add_widget(SecondPage(name="second"))
+        sm.add_widget(SecondPage(name="second"))
         return sm
 
-    # def on_start(self):
-    #     Clock.schedule_interval(game.update, 1 / 60.0)
+    def on_start(self):
+        second_page = self.root.get_screen("second")
+        background = second_page.ids.background
+        Clock.schedule_interval(background.scroll_texture, 1 / 60.0)
 
 
 if __name__ == "__main__":
