@@ -15,6 +15,7 @@ class Background(Widget):
         super().__init__(**kwargs)
 
         self.clound_texture = Image(source="clound.png").texture
+        self.clound_texture.wrap = "repeat"
 
     pass
 
