@@ -21,7 +21,7 @@ class Background(Widget):
 
     def scroll_texture(self, time_passed):
         self.clound_texture.uvpos = (
-            (self.clound_texture.uvpos[0] + time_passed) % Window.width,
+            (self.clound_texture.uvpos[0] + time_passed / 6.5) % Window.width,
             self.clound_texture.uvpos[1],
         )
         texture = self.property("clound_texture")
@@ -32,7 +32,7 @@ class Background(Widget):
 
 class DinoRunApp(App):
     def on_start(self):
-        Clock.schedule_interval(self.root.ids.background.scroll_texture, 1 / 7.5)
+        Clock.schedule_interval(self.root.ids.background.scroll_texture, 1 / 60.0)
 
     pass
 
