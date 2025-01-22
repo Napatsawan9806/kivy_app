@@ -4,12 +4,13 @@ from kivy.uix.widget import Widget
 from kivy.app import App
 from kivy.uix.image import Image
 from kivy.core.window import Window
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, NumericProperty, ReferenceListProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
 
 
-class Background(Widget):
+class GameBackground(Widget):
     clound_texture = ObjectProperty(None)
     floor_texture = ObjectProperty(None)
 
@@ -40,15 +41,35 @@ class Background(Widget):
         texture1.dispatch(self)
         texture2.dispatch(self)
 
+
+class FirstPage(Screen):
     pass
+
+
+class SecondPage(Screen):
+    # def __init__(self, **kwargs):
+    #     super().__init__(**kwargs)
+    #     self.background = GameBackground()
+    #     self.add_widget(self.background)
+    pass
+
+
+# class DinoGame(Widget):
+#     background = ObjectProperty(GameBackground())
+
+#     def update(self):
+#         self.background.scroll_texture()
 
 
 class DinoRunApp(App):
-    def on_start(self):
-        Clock.schedule_interval(self.root.ids.background.scroll_texture, 1 / 60.0)
-        Clock.schedule_interval(self.root.ids.background.scroll_texture, 1 / 60.0)
+    def build(self):
+        sm = ScreenManager()
+        sm.add_widget(FirstPage(name="first"))
+        # sm.add_widget(SecondPage(name="second"))
+        return sm
 
-    pass
+    # def on_start(self):
+    #     Clock.schedule_interval(game.update, 1 / 60.0)
 
 
 if __name__ == "__main__":
