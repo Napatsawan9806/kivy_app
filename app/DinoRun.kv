@@ -1,11 +1,16 @@
 FloatLayout:
 	Background:
+		id: background
 		canvas.before:
 			Rectangle:
 				source: 'background.jpg'
 				pos: self.pos
 				size: self.size
 			Rectangle:
-				size: self.width, 204
-				pos: self.pos[0], self.pos[1] + self.height - 204
+				size: self.width, 210
+				pos: self.pos[0], self.pos[1] + self.height - 210
 				texture: self.clound_texture
+			Rectangle:
+				size: self.width, 200
+				pos: self.pos[0], self.pos[1]
+				texture: self.floor_texture

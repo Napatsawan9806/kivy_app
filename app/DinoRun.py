@@ -11,6 +11,7 @@ from kivy.clock import Clock
 
 class Background(Widget):
     clound_texture = ObjectProperty(None)
+    floor_texture = ObjectProperty(None)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -18,6 +19,9 @@ class Background(Widget):
         self.clound_texture = Image(source="clound.png").texture
         self.clound_texture.wrap = "repeat"
         self.clound_texture.uvsize = (Window.width / self.clound_texture.width, -1)
+
+        self.floor_texture = Image(source="floor.png").texture
+        # self.floor_texture
 
     def scroll_texture(self, time_passed):
         self.clound_texture.uvpos = (
