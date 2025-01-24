@@ -5,7 +5,12 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import ObjectProperty, NumericProperty, ReferenceListProperty
+from kivy.properties import (
+    ObjectProperty,
+    NumericProperty,
+    ReferenceListProperty,
+    StringProperty,
+)
 from kivy.vector import Vector
 from kivy.clock import Clock
 
@@ -17,11 +22,11 @@ class GameBackground(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.clound_texture = Image(source="clound.png").texture
+        self.clound_texture = Image(source="app\image\clound.png").texture
         self.clound_texture.wrap = "repeat"
         self.clound_texture.uvsize = (Window.width / self.clound_texture.width, -1)
 
-        self.floor_texture = Image(source="floor.png").texture
+        self.floor_texture = Image(source="app\image\ground.png").texture
         self.floor_texture.wrap = "repeat"
         self.floor_texture.uvsize = (Window.width / self.floor_texture.width, -1)
 
@@ -32,7 +37,7 @@ class GameBackground(Widget):
         )
 
         self.floor_texture.uvpos = (
-            (self.floor_texture.uvpos[0] + time_passed / 13.0) % Window.width,
+            (self.floor_texture.uvpos[0] + time_passed / 5.0) % Window.width,
             self.floor_texture.uvpos[1],
         )
 
@@ -42,23 +47,27 @@ class GameBackground(Widget):
         texture2.dispatch(self)
 
 
+class Dino(Widget):
+    source = StringProperty("app\image\dino1.png")
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.images = ["app\image\dino1.png", "app\image\dino2.png"]
+        self.image_index = 0
+        Clock.schedule_interval(self.animate_character, 1 / 20.0)
+
+    def animate_character(self, dt):
+        self.image_index = (self.image_index + 1) % len(self.images)
+        self.source = self.images[self.image_index]
+        self.canvas.ask_update()
+
+
 class FirstPage(Screen):
     pass
 
 
 class SecondPage(Screen):
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
-    #     self.background = GameBackground()
-    #     self.add_widget(self.background)
     pass
-
-
-# class DinoGame(Widget):
-#     background = ObjectProperty(GameBackground())
-
-#     def update(self):
-#         self.background.scroll_texture()
 
 
 class DinoRunApp(App):
@@ -69,9 +78,15 @@ class DinoRunApp(App):
         return sm
 
     def on_start(self):
+
+        # dino = Dino()
+
         second_page = self.root.get_screen("second")
-        background = second_page.ids.background
-        Clock.schedule_interval(background.scroll_texture, 1 / 60.0)
+        first_page = self.root.get_screen("first")
+        Clock.schedule_interval(first_page.ids.background.scroll_texture, 1 / 60.0)
+        Clock.schedule_interval(second_page.ids.background.scroll_texture, 1 / 60.0)
+
+        # Clock.schedule_interval(dino.animate_character, 1 / 60.0)
 
 
 if __name__ == "__main__":
