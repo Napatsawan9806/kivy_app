@@ -54,12 +54,18 @@ class Dino(Widget):
         super().__init__(**kwargs)
         self.images = ["app\image\dino1.png", "app\image\dino2.png"]
         self.image_index = 0
+        self.velocity_y = 0  # ความเร็วในแกน Y
+        self.is_jumping = False  # สถานะการกระโดด
         Clock.schedule_interval(self.animate_character, 1 / 20.0)
 
     def animate_character(self, dt):
         self.image_index = (self.image_index + 1) % len(self.images)
         self.source = self.images[self.image_index]
-        self.canvas.ask_update()
+
+    def jump(self):
+        if not self.is_jumping:  # กระโดดได้เฉพาะเมื่ออยู่บนพื้น
+            self.is_jumping = True
+            self.velocity_y = 15  # ความเร็วเริ่มต้นของการกระโดด
 
 
 class FirstPage(Screen):
