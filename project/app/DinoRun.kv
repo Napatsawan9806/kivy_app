@@ -19,10 +19,9 @@ ScreenManager:
 <DinoGame>:
 	name: 'second'
 	FloatLayout:
+        id: game_layout
 		GameBackground:
 			id: background
-		FloatLayout:
-            id: game_layout
 		Dino:
 			id: dino
 			size_hint: None, None
@@ -54,10 +53,3 @@ ScreenManager:
         	source: self.source
         	size: self.size
         	pos: self.pos
-
-
-<Cactus>:
-	id: cactus
-	canvas:
-		Rectangle:
-			source: 'cactus.png'

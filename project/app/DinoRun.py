@@ -2,6 +2,7 @@ import kivy
 
 from kivy.uix.widget import Widget
 from kivy.app import App
+from kivy.graphics import Rectangle
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -62,7 +63,7 @@ class Dino(Widget):
     def jump(self):
         if not self.is_jumping:  # กระโดดได้เฉพาะเมื่ออยู่บนพื้น
             self.is_jumping = True
-            self.velocity_y = 18  # ความเร็วเริ่มต้นของการกระโดด
+            self.velocity_y = 23  # ความเร็วเริ่มต้นของการกระโดด
 
     def move(self, *args):
         # การปรับความเร็วในแกน y และตำแหน่ง
@@ -86,10 +87,21 @@ class Cactus(Widget):
         self.y = 180
         self.velocity_x = 5
 
+        with self.canvas:
+            self.texture = Image(source="image/cactus.png").texture
+            self.rect = Rectangle(texture=self.texture, size=(50, 50), pos=self.pos)
+
+        # อัปเดตตำแหน่งภาพให้สอดคล้องกับ widget
+        self.bind(pos=self.update_graphics_pos)
+
     def move(self, dt):
         self.x -= self.velocity_x
         if self.x + self.width < 0:
             self.parent.remove_widget(self)
+
+    def update_graphics_pos(self, *args):
+        # อัปเดตตำแหน่งของกราฟิก
+        self.rect.pos = self.pos
 
 
 class IntoGame(Screen):
@@ -108,6 +120,7 @@ class DinoGame(Screen):
         if not self.is_game_over:
             cactus = Cactus()
             self.ids.game_layout.add_widget(cactus)
+            print("Spawned a Cactus at", cactus.x, cactus.y)
 
     def update(self, dt):
         if self.is_game_over:
