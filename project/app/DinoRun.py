@@ -5,12 +5,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.properties import (
-    ObjectProperty,
-    NumericProperty,
-    ReferenceListProperty,
-    StringProperty,
-)
+from kivy.properties import ObjectProperty, StringProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
 
@@ -22,11 +17,11 @@ class GameBackground(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self.clound_texture = Image(source="app\image\clound.png").texture
+        self.clound_texture = Image(source="image\clound.png").texture
         self.clound_texture.wrap = "repeat"
         self.clound_texture.uvsize = (Window.width / self.clound_texture.width, -1)
 
-        self.floor_texture = Image(source="app\image\ground.png").texture
+        self.floor_texture = Image(source="image\ground.png").texture
         self.floor_texture.wrap = "repeat"
         self.floor_texture.uvsize = (Window.width / self.floor_texture.width, -1)
 
@@ -48,11 +43,11 @@ class GameBackground(Widget):
 
 
 class Dino(Widget):
-    source = StringProperty("app\image\dino1.png")
+    source = StringProperty("image\dino1.png")
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.images = ["app\image\dino1.png", "app\image\dino2.png"]
+        self.images = ["image\dino1.png", "image\dino2.png"]
         self.image_index = 0
         self.velocity_y = 0  # ความเร็วในแกน Y
         self.is_jumping = False  # สถานะการกระโดด
@@ -95,12 +90,20 @@ class DinoRunApp(App):
         return sm
 
     def on_start(self):
+
+        Window.bind(on_key_down=self.on_key_down)
+
         second_page = self.root.get_screen("second")
         first_page = self.root.get_screen("first")
         Clock.schedule_interval(first_page.ids.background.scroll_texture, 1 / 60.0)
         Clock.schedule_interval(second_page.ids.background.scroll_texture, 1 / 60.0)
 
         Clock.schedule_interval(second_page.ids.dino.move, 1 / 60.0)
+
+    def on_key_down(self, instance, key, scancode, codepoint, modifier):
+        if key == 32:
+            second_page = self.root.get_screen("second")
+            second_page.ids.dino.jump()
 
 
 if __name__ == "__main__":

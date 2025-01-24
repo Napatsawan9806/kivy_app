@@ -26,18 +26,13 @@ ScreenManager:
 			size_hint: None, None
             size: 120, 120
             pos: 15, 185
-		Button:
-            text: 'Jump'
-            size_hint: 0.2, 0.1
-            pos_hint: {"x": 0.4, "top": 0.2}
-            on_press: dino.jump()
 
 
 <GameBackground>:
 	id: background
 	canvas.before:
 		Rectangle:
-			source: 'app\image\background.jpg'
+			source: 'image\background.jpg'
 			pos: self.pos
 			size: self.size
 		Rectangle:
