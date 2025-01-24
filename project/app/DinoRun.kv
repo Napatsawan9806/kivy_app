@@ -1,9 +1,9 @@
 ScreenManager:
-	FirstPage:
-	SecondPage:
+	IntoGame:
+	DinoGame:
 
 
-<FirstPage>:
+<IntoGame>:
 	name: 'first'
 	FloatLayout:
 		GameBackground:
@@ -16,7 +16,7 @@ ScreenManager:
 			background_color: 0, 0, 1, 0.5
 			on_press: root.manager.current = 'second'
 		
-<SecondPage>:
+<DinoGame>:
 	name: 'second'
 	FloatLayout:
 		GameBackground:
@@ -25,7 +25,7 @@ ScreenManager:
 			id: dino
 			size_hint: None, None
             size: 120, 120
-            pos: 15, 185
+            pos: 15, 180
 
 
 <GameBackground>:
@@ -52,3 +52,11 @@ ScreenManager:
         	source: self.source
         	size: self.size
         	pos: self.pos
+
+
+<Cactus>:
+	id: cactus
+	canvas:
+		Rectangle:
+			source: 'cactus.png'
+			size: self.size

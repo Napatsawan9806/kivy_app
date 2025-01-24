@@ -62,7 +62,7 @@ class Dino(Widget):
     def jump(self):
         if not self.is_jumping:  # กระโดดได้เฉพาะเมื่ออยู่บนพื้น
             self.is_jumping = True
-            self.velocity_y = 17  # ความเร็วเริ่มต้นของการกระโดด
+            self.velocity_y = 18  # ความเร็วเริ่มต้นของการกระโดด
 
     def move(self, *args):
         # การปรับความเร็วในแกน y และตำแหน่ง
@@ -71,34 +71,48 @@ class Dino(Widget):
         self.source = self.jump_image
 
         # ตรวจสอบไม่ให้ตกลงต่ำกว่าพื้น
-        if self.y <= 185:
-            self.y = 185
+        if self.y <= 180:
+            self.y = 180
             self.velocity_y = 0
             self.is_jumping = False
             self.source = self.run_image[self.image_index]
 
 
-class FirstPage(Screen):
+class Cactus(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size = (50, 100)
+        self.x = Window.width
+        self.y = 185
+        self.velocity_x = 5
+
+    def move(self, dt):
+        self.x -= self.velocity_x
+        if self.x + self.width < 0:
+            self.parent.remove_widget(self)
+
+
+class IntoGame(Screen):
     pass
 
 
-class SecondPage(Screen):
+class DinoGame(Screen):
     pass
 
 
 class DinoRunApp(App):
     def build(self):
         sm = ScreenManager()
-        sm.add_widget(FirstPage(name="first"))
-        sm.add_widget(SecondPage(name="second"))
+        sm.add_widget(IntoGame(name="first"))
+        sm.add_widget(DinoGame(name="second"))
         return sm
 
     def on_start(self):
 
         Window.bind(on_key_down=self.on_key_down)
 
-        second_page = self.root.get_screen("second")
         first_page = self.root.get_screen("first")
+        second_page = self.root.get_screen("second")
         Clock.schedule_interval(first_page.ids.background.scroll_texture, 1 / 60.0)
         Clock.schedule_interval(second_page.ids.background.scroll_texture, 1 / 60.0)
 
