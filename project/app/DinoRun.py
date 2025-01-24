@@ -83,7 +83,7 @@ class Cactus(Widget):
         super().__init__(**kwargs)
         self.size = (50, 100)
         self.x = Window.width
-        self.y = 185
+        self.y = 180
         self.velocity_x = 5
 
     def move(self, dt):
@@ -97,7 +97,41 @@ class IntoGame(Screen):
 
 
 class DinoGame(Screen):
-    pass
+    is_game_over = False
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.spawn_cactus, 2)
+        Clock.schedule_interval(self.update, 1 / 60.0)
+
+    def spawn_cactus(self, dt):
+        if not self.is_game_over:
+            cactus = Cactus()
+            self.ids.game_layout.add_widget(cactus)
+
+    def update(self, dt):
+        if self.is_game_over:
+            return
+
+        dino = self.ids.dino
+
+        for child in self.ids.game_layout.children[:]:
+            if isinstance(child, Cactus):
+                child.move(dt)
+
+                if dino.collide_widget(child):
+                    self.game_over()
+
+    def game_over(self):
+        self.is_game_over = True
+        Clock.unschedule(self.update)
+        Clock.unschedule(self.spawn_cactus)
+        print("Game Over!")
+
+    def restart_game(self):
+        self.is_game_over = False
+        self.ids.game_layout.clear_widgets()
+        self.ids.game_layout.add_widget(self.ids.dino)
 
 
 class DinoRunApp(App):

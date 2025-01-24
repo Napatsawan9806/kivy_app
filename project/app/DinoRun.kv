@@ -21,6 +21,8 @@ ScreenManager:
 	FloatLayout:
 		GameBackground:
 			id: background
+		FloatLayout:
+            id: game_layout
 		Dino:
 			id: dino
 			size_hint: None, None
@@ -59,4 +61,3 @@ ScreenManager:
 	canvas:
 		Rectangle:
 			source: 'cactus.png'
-			size: self.size
