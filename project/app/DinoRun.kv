@@ -1,0 +1,59 @@
+ScreenManager:
+	FirstPage:
+	SecondPage:
+
+
+<FirstPage>:
+	name: 'first'
+	FloatLayout:
+		GameBackground:
+			id: background
+		Button:
+			text: 'Play Game'
+			size_hint: 0.2, 0.15
+			pos_hint: {"x" : 0.4, "top" : 0.65}
+			font_size: 30
+			background_color: 0, 0, 1, 0.5
+			on_press: root.manager.current = 'second'
+		
+<SecondPage>:
+	name: 'second'
+	FloatLayout:
+		GameBackground:
+			id: background
+		Dino:
+			id: dino
+			size_hint: None, None
+            size: 120, 120
+            pos: 15, 185
+		Button:
+            text: 'Jump'
+            size_hint: 0.2, 0.1
+            pos_hint: {"x": 0.4, "top": 0.2}
+            on_press: dino.jump()
+
+
+<GameBackground>:
+	id: background
+	canvas.before:
+		Rectangle:
+			source: 'app\image\background.jpg'
+			pos: self.pos
+			size: self.size
+		Rectangle:
+			size: self.width, 210
+			pos: self.pos[0], self.pos[1] + self.height - 210
+			texture: self.clound_texture
+		Rectangle:
+			size: self.width, 200
+			pos: self.pos[0], self.pos[1]
+			texture: self.floor_texture
+
+
+<Dino>:
+	id: dino
+	canvas:
+		Rectangle:
+        	source: self.source
+        	size: self.size
+        	pos: self.pos
