@@ -156,13 +156,20 @@ class IntoGame(Screen):
 
 class DinoGame(Screen):
     is_game_over = False
-    score = 0
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        Clock.schedule_interval(self.spawn_enemy, 2)
         Clock.schedule_interval(self.update, 1 / 60.0)
-        Clock.schedule_interval(self.increase_score, 1 / 4.0)
+
+    def start_game(self):
+        # รีเซ็ตสถานะเกม
+        self.is_game_over = False
+        self.score = 0
+        self.ids.score_label.text = f"Score: {self.score}"  # รีเซ็ตข้อความคะแนน
+
+        # เริ่มการนับคะแนนและการสร้างศัตรู
+        Clock.schedule_interval(self.spawn_enemy, 2)
+        Clock.schedule_interval(self.increase_score, 1 / 2.0)
 
     def spawn_enemy(self, dt):
         enemy_type = random.choice([Cactus, Bird])  # สุ่มชนิดศัตรู
@@ -231,6 +238,8 @@ class DinoRunApp(App):
             dino = second_page.ids.dino
             projectile = Projectile(pos=(dino.x + dino.width, dino.y + dino.height / 2))
             second_page.ids.game_layout.add_widget(projectile)
+        elif key == 13:
+            second_page.start_game()
 
 
 if __name__ == "__main__":
