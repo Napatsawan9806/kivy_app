@@ -106,7 +106,16 @@ class IntoGame(Screen):
 
 
 class DinoGame(Screen):
-    pass
+    is_game_over = False
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        Clock.schedule_interval(self.spawn_enemy, 2)
+
+    def spawn_enemy(self, dt):
+        if not self.is_game_over:
+            enemy = Enemy()
+            self.ids.game_layout.add_widget(enemy)
 
 
 class DinoRunApp(App):
