@@ -82,12 +82,9 @@ class Dino(Widget):
 class Enemy(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.size = (40, 60)
-        self.x = Window.width
-        self.y = 180
         self.velocity_x = 5
         with self.canvas:
-            Color(1, 0, 0, 1)
+            # Color(1, 0, 0, 1)
             self.rect = Rectangle(pos=self.pos, size=self.size)
 
         self.bind(pos=self.update_graphics_pos)
@@ -115,7 +112,7 @@ class DinoGame(Screen):
     def spawn_enemy(self, dt):
         if not self.is_game_over:
             enemy = Enemy()
-            self.ids.game_layout.add_widget(enemy)
+            self.ids.enemy.add_widget(enemy)
 
 
 class DinoRunApp(App):
