@@ -104,6 +104,28 @@ class Enemy(Widget):
         self.rect.pos = self.pos
 
 
+class Projectile(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size = (20, 20)
+        self.velocity_x = 10
+        with self.canvas:
+            Color(0, 1, 0, 1)
+            self.rect = Rectangle(
+                source=".\image\gun.png", pos=self.pos, size=self.size
+            )
+
+        self.bind(pos=self.update_graphics_pos)
+
+    def move(self, dt):
+        self.x += self.velocity_x
+        if self.x > Window.width:
+            self.parent.remove_widget(self)
+
+    def update_graphics_pos(self, *args):
+        self.rect.pos = self.pos
+
+
 class IntoGame(Screen):
     pass
 
@@ -125,9 +147,31 @@ class DinoGame(Screen):
         if self.is_game_over:
             return
 
+        dino = self.ids.dino
+
         for child in self.ids.game_layout.children[:]:
             if isinstance(child, Enemy):
                 child.move(dt)
+
+                if dino.collide_widget(child):
+                    self.game_over()
+
+            elif isinstance(child, Projectile):
+                child.move(dt)
+
+                # ตรวจสอบการชนระหว่าง Projectile และศัตรู
+                for enemy in [
+                    e for e in self.ids.game_layout.children if isinstance(e, Enemy)
+                ]:
+                    if child.collide_widget(enemy):
+                        self.ids.game_layout.remove_widget(enemy)
+                        self.ids.game_layout.remove_widget(child)
+
+    def game_over(self):
+        self.is_game_over = True
+        Clock.unschedule(self.update)
+        Clock.unschedule(self.spawn_enemy)
+        print("Game Over!")
 
 
 class DinoRunApp(App):
@@ -149,9 +193,13 @@ class DinoRunApp(App):
         Clock.schedule_interval(second_page.ids.dino.move, 1 / 60.0)
 
     def on_key_down(self, instance, key, scancode, codepoint, modifier):
-        if key == 119:
-            second_page = self.root.get_screen("second")
+        second_page = self.root.get_screen("second")
+        if key == 119 or key == 32:
             second_page.ids.dino.jump()
+        elif key == 102:
+            dino = second_page.ids.dino
+            projectile = Projectile(pos=(dino.x + dino.width, dino.y + dino.height / 2))
+            second_page.ids.game_layout.add_widget(projectile)
 
 
 if __name__ == "__main__":
