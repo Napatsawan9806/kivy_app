@@ -79,6 +79,28 @@ class Dino(Widget):
             self.source = self.run_image[self.image_index]
 
 
+class Enemy(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.size = (40, 60)
+        self.x = Window.width
+        self.y = 180
+        self.velocity_x = 5
+        with self.canvas:
+            Color(1, 0, 0, 1)
+            self.rect = Rectangle(pos=self.pos, size=self.size)
+
+        self.bind(pos=self.update_graphics_pos)
+
+    def move(self, dt):
+        self.x -= self.velocity_x
+        if self.x + self.width < 0:
+            self.parent.remove_widget(self)
+
+    def update_graphics_pos(self, *args):
+        self.rect.pos = self.pos
+
+
 class IntoGame(Screen):
     pass
 
