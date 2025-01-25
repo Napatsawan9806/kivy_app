@@ -156,24 +156,29 @@ class IntoGame(Screen):
 
 class DinoGame(Screen):
     is_game_over = False
+    score = 0
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Clock.schedule_interval(self.spawn_enemy, 2)
         Clock.schedule_interval(self.update, 1 / 60.0)
+        Clock.schedule_interval(self.increase_score, 1 / 4.0)
 
     def spawn_enemy(self, dt):
         enemy_type = random.choice([Cactus, Bird])  # สุ่มชนิดศัตรู
         enemy = enemy_type()
         self.ids.game_layout.add_widget(enemy)
 
+    def increase_score(self, dt):
+        if not self.is_game_over:
+            self.score += 1
+            self.ids.score_label.text = f"Score: {self.score}"
+
     def update(self, dt):
         if self.is_game_over:
             return
 
         dino = self.ids.dino
-        projectiles_to_remove = []
-        cactus_to_remove = []
 
         for child in self.ids.game_layout.children[:]:
             if isinstance(child, (Cactus, Bird)):  # ตรวจสอบได้ทั้งสองชนิด
@@ -195,7 +200,9 @@ class DinoGame(Screen):
         self.is_game_over = True
         Clock.unschedule(self.update)
         Clock.unschedule(self.spawn_enemy)
-        print("Game Over!")
+        Clock.unschedule(self.increase_score)  # หยุดเพิ่มคะแนน
+        print(f"Game Over! Your score: {self.score}")  # แสดงคะแนนในคอนโซล
+        self.ids.score_label.text = f"Game Over! Final Score: {self.score}"
 
 
 class DinoRunApp(App):
