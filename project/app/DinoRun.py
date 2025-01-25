@@ -83,13 +83,12 @@ class Enemy(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.velocity_x = 5
-        self.size = (55, 90)
         self.x = Window.width
         self.y = 180
         self.pos = (self.x, self.y)
         with self.canvas:
             self.rect = Rectangle(
-                source=".\image\cactus.png", pos=self.pos, size=self.size
+                source=".\image\cactus.png", pos=self.pos, size=(50, 90)
             )
 
         self.bind(pos=self.update_graphics_pos)
@@ -148,6 +147,8 @@ class DinoGame(Screen):
             return
 
         dino = self.ids.dino
+        projectiles_to_remove = []
+        enemies_to_remove = []
 
         for child in self.ids.game_layout.children[:]:
             if isinstance(child, Enemy):
@@ -164,8 +165,15 @@ class DinoGame(Screen):
                     e for e in self.ids.game_layout.children if isinstance(e, Enemy)
                 ]:
                     if child.collide_widget(enemy):
-                        self.ids.game_layout.remove_widget(enemy)
-                        self.ids.game_layout.remove_widget(child)
+                        if enemy not in enemies_to_remove:
+                            enemies_to_remove.append(enemy)
+                        if child not in projectiles_to_remove:
+                            projectiles_to_remove.append(child)
+
+        for enemy in enemies_to_remove:
+            self.ids.game_layout.remove_widget(enemy)
+        for projectile in projectiles_to_remove:
+            self.ids.game_layout.remove_widget(projectile)
 
     def game_over(self):
         self.is_game_over = True
