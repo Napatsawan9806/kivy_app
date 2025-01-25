@@ -2,7 +2,7 @@ import kivy
 
 from kivy.uix.widget import Widget
 from kivy.app import App
-from kivy.graphics import Rectangle
+from kivy.graphics import Rectangle, Color
 from kivy.uix.image import Image
 from kivy.core.window import Window
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -79,72 +79,12 @@ class Dino(Widget):
             self.source = self.run_image[self.image_index]
 
 
-class Cactus(Widget):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.size = (50, 100)
-        self.x = Window.width
-        self.y = 180
-        self.velocity_x = 5
-
-        with self.canvas:
-            self.texture = Image(source="image/cactus.png").texture
-            self.rect = Rectangle(texture=self.texture, size=(50, 50), pos=self.pos)
-
-        # อัปเดตตำแหน่งภาพให้สอดคล้องกับ widget
-        self.bind(pos=self.update_graphics_pos)
-
-    def move(self, dt):
-        self.x -= self.velocity_x
-        if self.x + self.width < 0:
-            self.parent.remove_widget(self)
-
-    def update_graphics_pos(self, *args):
-        # อัปเดตตำแหน่งของกราฟิก
-        self.rect.pos = self.pos
-
-
 class IntoGame(Screen):
     pass
 
 
 class DinoGame(Screen):
-    is_game_over = False
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        Clock.schedule_interval(self.spawn_cactus, 2)
-        Clock.schedule_interval(self.update, 1 / 60.0)
-
-    def spawn_cactus(self, dt):
-        if not self.is_game_over:
-            cactus = Cactus()
-            self.ids.game_layout.add_widget(cactus)
-            print("Spawned a Cactus at", cactus.x, cactus.y)
-
-    def update(self, dt):
-        if self.is_game_over:
-            return
-
-        dino = self.ids.dino
-
-        for child in self.ids.game_layout.children[:]:
-            if isinstance(child, Cactus):
-                child.move(dt)
-
-                if dino.collide_widget(child):
-                    self.game_over()
-
-    def game_over(self):
-        self.is_game_over = True
-        Clock.unschedule(self.update)
-        Clock.unschedule(self.spawn_cactus)
-        print("Game Over!")
-
-    def restart_game(self):
-        self.is_game_over = False
-        self.ids.game_layout.clear_widgets()
-        self.ids.game_layout.add_widget(self.ids.dino)
+    pass
 
 
 class DinoRunApp(App):
