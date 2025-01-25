@@ -21,9 +21,18 @@ ScreenManager:
 	GameBackground:
 		id: background
 	Label:
+        id: start_label
+        text: "Press Enter to Start"
+		color: 1, 0, 0, 0.7
+        font_size: '32sp'
+        size_hint: None, None
+        size: self.texture_size
+        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+        opacity: 1
+	Label:
         id: score_label
         text: "Score: 0"
-		color: 0 , 0 , 1 , 0.75
+		color: 0, 0, 1, 0.45
         font_size: '24sp'
         size_hint: None, None
         size: self.texture_size

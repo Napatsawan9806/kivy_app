@@ -162,6 +162,7 @@ class DinoGame(Screen):
         Clock.schedule_interval(self.update, 1 / 60.0)
 
     def start_game(self):
+        self.ids.start_label.opacity = 0
         # รีเซ็ตสถานะเกม
         self.is_game_over = False
         self.score = 0
@@ -169,7 +170,7 @@ class DinoGame(Screen):
 
         # เริ่มการนับคะแนนและการสร้างศัตรู
         Clock.schedule_interval(self.spawn_enemy, 2)
-        Clock.schedule_interval(self.increase_score, 1 / 2.0)
+        Clock.schedule_interval(self.increase_score, 1 / 7.5)
 
     def spawn_enemy(self, dt):
         enemy_type = random.choice([Cactus, Bird])  # สุ่มชนิดศัตรู
