@@ -9,6 +9,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.properties import ObjectProperty, StringProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
+import random
 
 
 class GameBackground(Widget):
@@ -79,7 +80,7 @@ class Dino(Widget):
             self.source = self.run_image[self.image_index]
 
 
-class Enemy(Widget):
+class Cactus(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.velocity_x = 5
@@ -89,6 +90,30 @@ class Enemy(Widget):
         with self.canvas:
             self.rect = Rectangle(
                 source=".\image\cactus.png", pos=self.pos, size=(50, 90)
+            )
+
+        self.bind(pos=self.update_graphics_pos)
+
+    def move(self, dt):
+        self.x -= self.velocity_x
+        self.pos = (self.x, self.y)
+        if self.x + self.width < 0:
+            self.parent.remove_widget(self)
+
+    def update_graphics_pos(self, *args):
+        self.rect.pos = self.pos
+
+
+class Bird(Widget):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.velocity_x = 7
+        self.x = Window.width
+        self.y = 400
+        self.pos = (self.x, self.y)
+        with self.canvas:
+            self.rect = Rectangle(
+                source=".\image\chick.png", pos=self.pos, size=(70, 90)
             )
 
         self.bind(pos=self.update_graphics_pos)
@@ -138,9 +163,9 @@ class DinoGame(Screen):
         Clock.schedule_interval(self.update, 1 / 60.0)
 
     def spawn_enemy(self, dt):
-        if not self.is_game_over:
-            enemy = Enemy()
-            self.ids.game_layout.add_widget(enemy)
+        enemy_type = random.choice([Cactus, Bird])  # สุ่มชนิดศัตรู
+        enemy = enemy_type()
+        self.ids.game_layout.add_widget(enemy)
 
     def update(self, dt):
         if self.is_game_over:
@@ -148,32 +173,23 @@ class DinoGame(Screen):
 
         dino = self.ids.dino
         projectiles_to_remove = []
-        enemies_to_remove = []
+        cactus_to_remove = []
 
         for child in self.ids.game_layout.children[:]:
-            if isinstance(child, Enemy):
+            if isinstance(child, (Cactus, Bird)):  # ตรวจสอบได้ทั้งสองชนิด
                 child.move(dt)
-
                 if dino.collide_widget(child):
                     self.game_over()
-
             elif isinstance(child, Projectile):
                 child.move(dt)
-
-                # ตรวจสอบการชนระหว่าง Projectile และศัตรู
                 for enemy in [
-                    e for e in self.ids.game_layout.children if isinstance(e, Enemy)
+                    e
+                    for e in self.ids.game_layout.children
+                    if isinstance(e, (Cactus, Bird))
                 ]:
                     if child.collide_widget(enemy):
-                        if enemy not in enemies_to_remove:
-                            enemies_to_remove.append(enemy)
-                        if child not in projectiles_to_remove:
-                            projectiles_to_remove.append(child)
-
-        for enemy in enemies_to_remove:
-            self.ids.game_layout.remove_widget(enemy)
-        for projectile in projectiles_to_remove:
-            self.ids.game_layout.remove_widget(projectile)
+                        self.ids.game_layout.remove_widget(enemy)
+                        self.ids.game_layout.remove_widget(child)
 
     def game_over(self):
         self.is_game_over = True
