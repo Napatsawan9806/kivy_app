@@ -83,14 +83,20 @@ class Enemy(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.velocity_x = 5
+        self.size = (55, 90)
+        self.x = Window.width
+        self.y = 180
+        self.pos = (self.x, self.y)
         with self.canvas:
-            # Color(1, 0, 0, 1)
-            self.rect = Rectangle(pos=self.pos, size=self.size)
+            self.rect = Rectangle(
+                source=".\image\cactus.png", pos=self.pos, size=self.size
+            )
 
         self.bind(pos=self.update_graphics_pos)
 
     def move(self, dt):
         self.x -= self.velocity_x
+        self.pos = (self.x, self.y)
         if self.x + self.width < 0:
             self.parent.remove_widget(self)
 
@@ -108,11 +114,20 @@ class DinoGame(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         Clock.schedule_interval(self.spawn_enemy, 2)
+        Clock.schedule_interval(self.update, 1 / 60.0)
 
     def spawn_enemy(self, dt):
         if not self.is_game_over:
             enemy = Enemy()
-            self.ids.enemy.add_widget(enemy)
+            self.ids.game_layout.add_widget(enemy)
+
+    def update(self, dt):
+        if self.is_game_over:
+            return
+
+        for child in self.ids.game_layout.children[:]:
+            if isinstance(child, Enemy):
+                child.move(dt)
 
 
 class DinoRunApp(App):
@@ -134,7 +149,7 @@ class DinoRunApp(App):
         Clock.schedule_interval(second_page.ids.dino.move, 1 / 60.0)
 
     def on_key_down(self, instance, key, scancode, codepoint, modifier):
-        if key == 32:
+        if key == 119:
             second_page = self.root.get_screen("second")
             second_page.ids.dino.jump()
 

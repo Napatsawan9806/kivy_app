@@ -25,11 +25,8 @@ ScreenManager:
 		size_hint: None, None
         size: 120, 120
         pos: 15, 180
-	Enemy:
-		id: enemy
-		size_hint: None, None
-		size: 100, 100
-		pos: 15, 180
+	FloatLayout:
+        id: game_layout
 
 <GameBackground>:
 	id: background
@@ -55,11 +52,3 @@ ScreenManager:
         	source: self.source
         	size: self.size
         	pos: self.pos
-
-<Enemy>:
-	id: enemy
-	canvas:
-		Rectangle:
-			source: '.\image\cactus.png'
-			size: self.size
-			pos: self.pos
